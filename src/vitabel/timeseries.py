@@ -33,7 +33,7 @@ logger: logging.Logger = logging.getLogger("vitabel")
 def _timeseries_list_info(series_list: list[TimeSeriesBase]) -> pd.DataFrame:
     """Summarizes basic information about a list of time series data.
 
-    If the time series objects has a ``metadata`` attribute, the
+    If the time series objects have a ``metadata`` attribute, the
     metadata will also be included in the summary.
 
     Parameters
@@ -52,9 +52,6 @@ def _timeseries_list_info(series_list: list[TimeSeriesBase]) -> pd.DataFrame:
         if len(series) > 0:
             min_time = min(series.time_index)
             max_time = max(series.time_index)
-        if series.is_time_absolute():
-            min_time = min_time + series.time_start
-            max_time = max_time + series.time_start
         info_dict[idx].update(
             {
                 "First Entry": min_time,
@@ -63,11 +60,7 @@ def _timeseries_list_info(series_list: list[TimeSeriesBase]) -> pd.DataFrame:
                 "Offset": series.offset,
             }
         )
-    df = pd.DataFrame(info_dict).transpose()
-    desired_order = ['Name', 'Length', 'First Entry', 'Last Entry', 'Offset']
-    # Get the rest of the columns that are not in desired_order
-    remaining = [col for col in df.columns if col not in desired_order]
-    return df[desired_order + remaining]
+    return pd.DataFrame(info_dict).transpose()
 
 
 class TimeSeriesBase:
